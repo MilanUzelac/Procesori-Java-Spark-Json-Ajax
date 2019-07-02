@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Intel procesori</title>
+		
+	</head>
+	<body>
+		<a style="display:inline;padding-right:20px;" href="/">POCETNA   </a>
+		<a style="display:inline;padding-right:20px;" href="/dodaj">DODAJ  </a>
+		<a style="display:inline;padding-right:20px;" href="/izmenaPomocna">IZMENI  </a>
+		<br><br>
+		<h3>Izaberite model za izmenu</h3>
+		<form action="/izmenaProcesora" method="GET">
+		<label>Model: </label>
+		<input type="text" name="modelInput"/>
+		
+		<label>Unesite izmenu: </label>
+		<label>Marka</label>
+			<input type="text" name="marka">
+			<label>Kategorija</label>
+			<input type="text" name="kategorija">
+			<label>Model</label>
+			<input type="text" name="model">
+			<label>Socket</label>
+			<input type="text" name="socket">
+			<label>Radni takt</label>
+			<input type="text" name="takt">
+			<label>Broj jezgara</label>
+			<input type="text" name="brojJezgara">
+			<label>Potrosnja</label>
+			<input type="text" name="tdp">
+			<label>Garancija</label>
+			<input type="text" name="garancija">
+			<label>Cena</label>
+			<input type="text" name="cena">
+		<button type="submit">Posalji na izmenu</button>
+		<br><br>
+		</form>
+		
+		<section id="prikaz">
+		{{#if podaci}}
+			<div id="content">
+			{{#each podaci}}
+				<div class="person">
+				<div class="label">Marka:</div>
+                <div class="field">{{this.marka}}</div>
+                <div class="label">Kategorija:</div>
+                <div class="field">{{this.category}}</div>
+                <div class="label">Model:</div>
+                <div class="field">{{this.model}}</div>
+                <div class="label">Socket/slot:</div>
+                <div class="field">{{this.socket}}</div>
+                <div class="label">Radni takt:</div>
+                <div class="field">{{this.takt}}GHz</div>
+                <div class="label">Broj jezgara:</div>
+                <div class="field">{{this.brojJezgara}}</div>
+                <div class="label">Potrosnja:</div>
+                <div class="field">{{this.tdp}}W</div>
+                <div class="label">Garancija:</div>
+                <div class="field">{{this.garancija}} meseci</div>
+                <div class="label">Cena:</div>
+                <div class="field">{{this.cena}}RSD</div>
+                <br><br>
+                	
+            </div>
+			{{/each}}
+			</div>
+		{{else}}
+			<h3>Trenutno nema procesora!</h3>
+		{{/if}}
+		</section>
+		
+		<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+		
+		<script>
+			let prikaz=document.querySelector("#prikaz");
+    		function prikaziPodatke(lista){
+    		prikaz.innerHTML="";
+    		let html="";
+    		for(let item of lista){
+    			html+=`
+    			<div class="bg-primary">
+					<div class="row">
+						<div class="col-md-4">Marka:: ${item.marka}</div>
+						<div class="col-md-4">Kategorija: ${item.category}</div>
+						<div class="col-md-4">Model: ${item.model}</div>
+						<div class="col-md-4">Socket/slot: ${item.socket}</div>
+						<div class="col-md-4">Radni takt: ${item.takt}GHz</div>
+						<div class="col-md-4">Broj jezgara: ${item.brojJezgara}</div>
+						<div class="col-md-4">Potrosnja: ${item.tdp}W</div>
+						<div class="col-md-4">Garancija: ${item.garancija} godine</div>
+						<div class="col-md-4">Cena: ${item.cena}RSD</div>
+					</div>
+				</div><br><br>`;
+    		}
+    		prikaz.innerHTML=html;
+    	}
+			
+			
+		document.querySelector("#marka").onchange=function(){
+    		let element=document.querySelector("#marka");
+    		$.ajax({
+    			url:"/api/marka",
+    			method:"POST",
+    			data:{
+    				marka:element.value
+    			},
+    			success:function(response){
+    				let elementi=JSON.parse(response);
+    				prikaz.innerHTML="";
+    				prikaziPodatke(elementi);
+    			}
+    		
+    		});
+    		
+    	}
+    	
+    	
+    	
+    	document.querySelector("#kategorija").onchange=function(){
+    		let element=document.querySelector("#kategorija");
+    		$.ajax({
+    			url:"/api/kategorija",
+    			method:"POST",
+    			data:{
+    				"kategorija":element.value
+    			},
+    			success:function(response){
+    				let elementi=JSON.parse(response);
+    				prikaz.innerHTML="";
+    				prikaziPodatke(elementi);
+    			}
+    		
+    		});
+    		
+    	}
+    	
+    		document.querySelector("#socket").onchange=function(){
+    		let element=document.querySelector("#socket");
+    		$.ajax({
+    			url:"/api/socket",
+    			method:"POST",
+    			data:{
+    				"socket":element.value
+    			},
+    			success:function(response){
+    				let elementi=JSON.parse(response);
+    				prikaz.innerHTML="";
+    				prikaziPodatke(elementi);
+    			}
+    		
+    		});
+    		
+    	}
+    	
+    	
+    	document.querySelector("#brojJezgara").onchange=function(){
+    		let element=document.querySelector("#brojJezgara");
+    		$.ajax({
+    			url:"/api/brojJezgara",
+    			method:"POST",
+    			data:{
+    				"brojJezgara":element.value
+    			},
+    			success:function(response){
+    				let elementi=JSON.parse(response);
+    				prikaz.innerHTML="";
+    				prikaziPodatke(elementi);
+    			}
+    		
+    		});
+    		
+    	}
+    	
+    	
+    	
+    	document.getElementById("ceneLink").onclick=function(){
+    		let cenaOd = document.getElementById("od");
+    		let cenaDo = document.getElementById("do");
+    		$.ajax({
+    			url:"/api/cenaFilter",
+    			method:"POST",
+    			data:{
+    				cenaOd:cenaOd.value,
+    				cenaDo:cenaDo.value
+    			},
+    			success:function(response){
+    				let elementi=JSON.parse(response);
+    				prikaz.innerHTML="";
+    				prikaziPodatke(elementi);
+    			}
+    		
+    		});
+    	}
+    	
+
+		
+		document.getElementById("sortOpad").onclick=function(){
+			$.ajax({
+    			url:"/api/cenaSortirajOpadajuce",
+    			method:"POST",
+    			success:function(response){
+    				let elementi=JSON.parse(response);
+    				prikaz.innerHTML="";
+    				prikaziPodatke(elementi);
+    			}
+    		
+    		});
+		}
+	
+
+	
+	document.getElementById("sortRast").onclick=function(){
+			$.ajax({
+    			url:"/api/cenaSortirajRastuce",
+    			method:"POST",
+    			success:function(response){
+    				let elementi=JSON.parse(response);
+    				prikaz.innerHTML="";
+    				prikaziPodatke(elementi);
+    			}
+    		
+    		});
+		}
+		</script>
+		
+		
+	</body>
+	
+</html>
